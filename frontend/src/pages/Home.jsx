@@ -1,9 +1,17 @@
-import React from 'react'
+import Hero from "../components/Hero";
+import FeaturedCourses from "../components/FeaturedCourses";
+import WhyChooseUs from "../components/WhyChooseUs";
+import CallToAction from "../components/CallToAction";
 
-function Home() {
+const Home = () => {
   return (
-    <div>Home</div>
-  )
-}
+    <>
+      <Hero />
+      <FeaturedCourses />
+      <WhyChooseUs />
+      <CallToAction />
+    </>
+  );
+};
 
-export default Home
+export default Home;

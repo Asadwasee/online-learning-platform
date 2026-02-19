@@ -10,15 +10,11 @@ import {
 function Footer() {
   return (
     <footer className="bg-secondary text-textDark mt-16">
-
       {/* Top Section */}
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
         {/* About */}
         <div>
-          <h2 className="text-2xl font-bold text-primary mb-4">
-            LearnHub
-          </h2>
+          <h2 className="text-2xl font-bold text-primary mb-4">LearnHub</h2>
           <p className="text-sm leading-6">
             LearnHub is a professional and reliable online learning platform
             providing high-quality courses for skill development.
@@ -56,9 +52,7 @@ function Footer() {
 
         {/* Legal */}
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">
-            Legal
-          </h3>
+          <h3 className="text-lg font-semibold text-primary mb-4">Legal</h3>
           <ul className="space-y-2 text-sm">
             <li className="hover:text-primary cursor-pointer transition">
               Privacy Policy
@@ -74,9 +68,7 @@ function Footer() {
 
         {/* Connect */}
         <div>
-          <h3 className="text-lg font-semibold text-primary mb-4">
-            Connect
-          </h3>
+          <h3 className="text-lg font-semibold text-primary mb-4">Connect</h3>
 
           {/* Newsletter */}
           <form className="flex flex-col sm:flex-row gap-2 mb-6">
@@ -109,7 +101,6 @@ function Footer() {
             </a>
           </div>
         </div>
-
       </div>
 
       {/* Bottom Bar */}

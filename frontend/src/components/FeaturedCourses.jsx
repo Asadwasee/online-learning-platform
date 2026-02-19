@@ -32,25 +32,40 @@ const dummyCourses = [
   },
 ];
 
-const Courses = () => {
+const FeaturedCourses = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Future API call
-    setCourses(dummyCourses);
+    const fetchCourses = async () => {
+      try {
+        // Future API call here
+        setCourses(dummyCourses);
+      } catch (error) {
+        console.error("Failed to fetch courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   return (
     <section className="py-16 bg-light">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-dark text-center">
-          All Courses
+          Popular Courses
         </h2>
 
-        <Course courses={courses} />
+        {loading ? (
+          <p className="text-center mt-8">Loading courses...</p>
+        ) : (
+          <Course courses={courses} limit={3} />
+        )}
       </div>
     </section>
   );
 };
 
-export default Courses;
+export default FeaturedCourses;
