@@ -3,7 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
 const protect = require("./middleware/authMiddleware");
-
+const courseRoutes = require("./routes/courseRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 connectDB();
 
 const app = express();
@@ -25,3 +26,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+app.use("/api/courses", courseRoutes);
+app.use("/api/contact", contactRoutes);

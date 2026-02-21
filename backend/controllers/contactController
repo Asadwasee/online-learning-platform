@@ -1,0 +1,6 @@
+const Contact = require("../models/Contact");
+
+exports.saveContact = async (req, res) => {
+  const contact = await Contact.create(req.body);
+  res.status(201).json({ message: "Contact form submitted successfully" });
+};
