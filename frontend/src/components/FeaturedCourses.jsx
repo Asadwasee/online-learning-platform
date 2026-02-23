@@ -1,36 +1,6 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Course from "../components/Course";
-
-const dummyCourses = [
-  {
-    _id: "1",
-    title: "Full Stack Web Development",
-    instructor: "John Doe",
-    price: 49,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "2",
-    title: "React Advanced Concepts",
-    instructor: "Jane Smith",
-    price: 39,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "3",
-    title: "JavaScript Advanced Concepts",
-    instructor: "Jane Smith",
-    price: 39,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "4",
-    title: "Node.js APIs",
-    instructor: "Mark Lee",
-    price: 59,
-    thumbnail: "/book.svg",
-  },
-];
 
 const FeaturedCourses = () => {
   const [courses, setCourses] = useState([]);
@@ -39,10 +9,15 @@ const FeaturedCourses = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        // Future API call here
-        setCourses(dummyCourses);
+        // Backend API call to get all courses
+        const res = await axios.get("http://localhost:5000/api/courses");
+
+        // Agar backend sahi response de raha hai
+        if (res.data) {
+          setCourses(res.data);
+        }
       } catch (error) {
-        console.error("Failed to fetch courses");
+        console.error("Failed to fetch featured courses:", error);
       } finally {
         setLoading(false);
       }
@@ -59,9 +34,24 @@ const FeaturedCourses = () => {
         </h2>
 
         {loading ? (
-          <p className="text-center mt-8">Loading courses...</p>
+          <div className="flex justify-center items-center mt-12">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+          </div>
         ) : (
+          /* limit={3} ensures only 3 cards show on Home Page */
           <Course courses={courses} limit={3} />
+        )}
+
+        {/* View All Button for UX */}
+        {!loading && courses.length > 3 && (
+          <div className="text-center mt-12">
+            <button
+              onClick={() => (window.location.href = "/courses")}
+              className="border-2 border-primary text-primary px-8 py-2 rounded-full font-bold hover:bg-primary hover:text-white transition-all"
+            >
+              View All Courses
+            </button>
+          </div>
         )}
       </div>
     </section>

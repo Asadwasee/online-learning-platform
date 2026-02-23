@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   BookOpen,
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,34 +20,21 @@ function Navbar() {
   const user = JSON.parse(localStorage.getItem("user"));
   const isAdmin = user?.role === "admin";
 
-  const availableCourses = [
-    "React",
-    "JavaScript",
-    "Python",
-    "Node.js",
-    "UI/UX",
-  ];
-
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
 
-    const found = availableCourses.some((course) =>
-      course.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
-
-    if (found) {
-      navigate(`/courses?search=${searchTerm}`);
-      setSearchTerm("");
-      setIsOpen(false);
-    } else {
-      alert("Afsos! Yeh course filhal available nahi hai.");
-    }
+    navigate(`/courses?search=${searchTerm.toLowerCase()}`);
+    setSearchTerm("");
+    setIsOpen(false);
   };
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    window.location.reload();
+    localStorage.removeItem("token");
+    toast.success("Logged out successfully");
+    navigate("/login");
+    setTimeout(() => window.location.reload(), 500);
   };
 
   return (
@@ -122,7 +110,7 @@ function Navbar() {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1 text-primary text-sm font-bold border border-primary px-3 py-1.5 rounded-lg hover:bg-primary/90 hover:text-white transition-all"
+                  className="flex items-center gap-1 text-primary text-sm font-bold border border-primary px-3 py-1.5 rounded-lg hover:bg-primary hover:text-white transition-all"
                 >
                   <LogOut size={16} /> Logout
                 </button>
@@ -142,7 +130,7 @@ function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       {isOpen && (
-        <div className="md:hidden bg-accent px-6 py-6 space-y-4 border-t border-primary/10 shadow-xl animate-in slide-in-from-top duration-300">
+        <div className="md:hidden bg-accent px-6 py-6 space-y-4 border-t border-primary/10 shadow-xl">
           {/* Mobile Search */}
           <form onSubmit={handleSearch} className="relative">
             <input
@@ -200,12 +188,23 @@ function Navbar() {
               </Link>
             </div>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="w-full bg-primarytext-white py-2 rounded-lg flex items-center justify-center gap-2"
-            >
-              <LogOut size={18} /> Logout
-            </button>
+            <div className="flex flex-col gap-3">
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-center py-2 bg-blue-50 text-primary border border-primary rounded-lg font-bold"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Admin Dashboard
+                </Link>
+              )}
+              <button
+                onClick={handleLogout}
+                className="w-full bg-primary text-white py-2 rounded-lg flex items-center justify-center gap-2"
+              >
+                <LogOut size={18} /> Logout
+              </button>
+            </div>
           )}
         </div>
       )}

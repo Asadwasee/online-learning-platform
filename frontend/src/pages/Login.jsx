@@ -1,12 +1,67 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // Form States
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Input Change Handler
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Submit Handler
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      // Backend Login API Call
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        formData,
+      );
+
+      if (response.data.token) {
+        // Token aur User Info save karna
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        toast.success("Welcome back! Login Successful.");
+
+        // Role ke mutabik redirect karna
+        setTimeout(() => {
+          if (response.data.user.role === "admin") {
+            navigate("/admin");
+          } else {
+            navigate("/");
+          }
+        }, 1500);
+      }
+    } catch (err) {
+      const errorMsg =
+        err.response?.data?.message || "Invalid Email or Password!";
+      toast.error(errorMsg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-secondary px-6">
+      {/* Toast Container */}
+      <Toaster position="top-center" reverseOrder={false} />
+
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         {/* Heading */}
         <h2 className="text-3xl font-bold text-gray-800 text-center">
@@ -17,7 +72,7 @@ const Login = () => {
         </p>
 
         {/* Form */}
-        <form className="mt-8 space-y-5">
+        <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -30,6 +85,10 @@ const Login = () => {
               />
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
                 placeholder="Enter your email"
                 className="w-full outline-none bg-transparent text-gray-700 placeholder:text-gray-400"
               />
@@ -49,6 +108,10 @@ const Login = () => {
 
               <input
                 type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
                 placeholder="Enter your password"
                 className="w-full outline-none bg-transparent text-gray-700 placeholder:text-gray-400"
               />
@@ -82,9 +145,10 @@ const Login = () => {
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
+            disabled={loading}
+            className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition flex justify-center items-center"
           >
-            Login
+            {loading ? <Loader2 className="animate-spin mr-2" /> : "Login"}
           </button>
         </form>
 

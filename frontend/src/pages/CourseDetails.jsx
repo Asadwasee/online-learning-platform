@@ -1,30 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-const dummyCourses = [
-  {
-    _id: "1",
-    title: "Full Stack Web Development",
-    instructor: "John Doe",
-    price: 49,
-    thumbnail: "/book.svg",
-    description:
-      "Learn MERN stack from scratch and build real-world applications.",
-    duration: "12 Weeks",
-    level: "Beginner to Advanced",
-  },
-  {
-    _id: "2",
-    title: "React Advanced Concepts",
-    instructor: "Jane Smith",
-    price: 39,
-    thumbnail: "/book.svg",
-    description:
-      "Master React hooks, performance optimization and advanced patterns.",
-    duration: "8 Weeks",
-    level: "Intermediate",
-  },
-];
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -34,27 +11,20 @@ const CourseDetails = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        //  Future Backend Ready
-        // const res = await fetch(`${import.meta.env.VITE_API_URL}/api/courses/${id}`);
-        // const data = await res.json();
-        // setCourse(data);
-
-        // Temporary dummy
-        const found = dummyCourses.find((c) => c._id === id);
-        setCourse(found);
+        const res = await axios.get(`http://localhost:5000/api/courses/${id}`);
+        setCourse(res.data);
       } catch (error) {
-        console.error("Failed to fetch course details");
+        toast.error("Course details not found");
       } finally {
         setLoading(false);
       }
     };
-
     fetchCourse();
   }, [id]);
 
   if (loading) {
     return (
-      <div className="py-20 text-center text-dark">
+      <div className="py-20 text-center text-dark font-medium">
         Loading course details...
       </div>
     );
@@ -67,37 +37,44 @@ const CourseDetails = () => {
   }
 
   return (
-    <section className="bg-light py-16">
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+    <section className="bg-light py-16 min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         {/* LEFT IMAGE */}
         <div>
           <img
-            src={course.thumbnail}
-            alt={course.title}
-            className="w-full rounded-2xl shadow-lg"
+            src={course.image || course.thumbnail}
+            alt={course.name}
+            className="w-full rounded-2xl shadow-lg object-cover max-h-100"
           />
         </div>
 
         {/* RIGHT CONTENT */}
         <div>
-          <h1 className="text-4xl font-bold text-dark">{course.title}</h1>
+          <h1 className="text-4xl font-bold text-dark">{course.name || course.title}</h1>
 
           <p className="mt-4 text-gray-600">
             Instructor: <span className="font-medium">{course.instructor}</span>
           </p>
 
-          <p className="mt-2 text-gray-600">Duration: {course.duration}</p>
+          <div className="flex gap-4 mt-2">
+            <p className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+              Code: {course.courseCode}
+            </p>
+          </div>
 
-          <p className="mt-2 text-gray-600">Level: {course.level}</p>
+          <p className="mt-6 text-dark leading-relaxed text-lg">
+            {course.description}
+          </p>
 
-          <p className="mt-6 text-dark leading-relaxed">{course.description}</p>
-
-          <div className="mt-8 flex items-center justify-between">
-            <span className="text-2xl font-bold text-primary">
+          <div className="mt-8 flex items-center justify-between border-t pt-6">
+            <span className="text-3xl font-bold text-primary">
               ${course.price}
             </span>
 
-            <button className="bg-primary text-light px-6 py-3 rounded-lg hover:opacity-90 transition">
+            <button 
+              onClick={() => toast.success("Redirecting to payment...")}
+              className="bg-primary text-light px-8 py-3 rounded-lg font-bold hover:opacity-90 shadow-lg transition"
+            >
               Enroll Now
             </button>
           </div>

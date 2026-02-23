@@ -32,7 +32,7 @@ const Hero = () => {
 
             <Link
               to="/register"
-              className="border border-primary text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary hover:text-light transition"
+              className="border border-primary text-primary px-6 py-3 rounded-lg font-medium hover:bg-primary hover:text-white transition"
             >
               Start Free Trial
             </Link>

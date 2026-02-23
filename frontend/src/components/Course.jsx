@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 const Course = ({ courses, limit }) => {
-  // Course logic (Home page mein only tree cards display ke liye)
   const displayedCourses = limit ? courses.slice(0, limit) : courses;
 
   return (
@@ -9,16 +8,15 @@ const Course = ({ courses, limit }) => {
       {displayedCourses.map((course) => (
         <div
           key={course._id}
-          className="bg-light rounded-xl shadow-md p-5 hover:shadow-xl transition"
+          className="bg-white rounded-xl shadow-md p-5 hover:shadow-xl transition flex flex-col justify-between"
         >
           <img
-            src={course.thumbnail}
-            alt={course.title}
-            className="h-48 w-full object-contain rounded-lg"
+            src={course.image || course.thumbnail}
+            alt={course.name}
+            className="h-48 w-full object-cover rounded-lg"
           />
-
           <h3 className="mt-4 text-lg font-semibold text-dark">
-            {course.title}
+            {course.name || course.title}
           </h3>
 
           <p className="text-sm text-gray-500 mt-2">{course.instructor}</p>
@@ -30,7 +28,7 @@ const Course = ({ courses, limit }) => {
               to={`/courses/${course._id}`}
               className="bg-primary text-light px-4 py-2 rounded-md text-sm hover:opacity-90 transition"
             >
-              View
+              View Details
             </Link>
           </div>
         </div>

@@ -1,53 +1,38 @@
 import { useEffect, useState } from "react";
 import Course from "../components/Course";
-
-const dummyCourses = [
-  {
-    _id: "1",
-    title: "Full Stack Web Development",
-    instructor: "John Doe",
-    price: 49,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "2",
-    title: "React Advanced Concepts",
-    instructor: "Jane Smith",
-    price: 39,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "3",
-    title: "JavaScript Advanced Concepts",
-    instructor: "Jane Smith",
-    price: 39,
-    thumbnail: "/book.svg",
-  },
-  {
-    _id: "4",
-    title: "Node.js APIs",
-    instructor: "Mark Lee",
-    price: 59,
-    thumbnail: "/book.svg",
-  },
-];
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Future API call
-    setCourses(dummyCourses);
+    const fetchAllCourses = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/courses");
+        setCourses(res.data);
+      } catch (error) {
+        toast.error("Failed to load courses");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAllCourses();
   }, []);
 
   return (
-    <section className="py-16 bg-light">
+    <section className="py-16 bg-light min-h-screen">
       <div className="max-w-7xl mx-auto px-6">
         <h2 className="text-3xl font-bold text-dark text-center">
           All Courses
         </h2>
 
-        <Course courses={courses} />
+        {loading ? (
+          <div className="text-center mt-20">Loading amazing courses...</div>
+        ) : (
+          <Course courses={courses} />
+        )}
       </div>
     </section>
   );
