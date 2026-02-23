@@ -61,6 +61,7 @@ Start the React development server:
 
 Bash
 npm run dev
+
 ### Admin Access
 To access the Admin Panel, navigate to /admin.
 
@@ -68,9 +69,6 @@ To access the Admin Panel, navigate to /admin.
 
 # Contributors
 # Asad Waseem (Team Lead )
-
 # Umer (Developer)
-
 # Fasiullah (Developer)
-
 # Shoaib (Developer)
